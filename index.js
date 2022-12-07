@@ -1,12 +1,18 @@
-const express = require('express');
-const cors = require('cors');
-const mongoose = require('mongoose');
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import { userRouter } from './routes/index.js';
+import dotenv from 'dotenv';
 
 const app = express();
-require('dotenv').config();
+dotenv.config();
 
 app.use(cors());
 app.use(express.json());
+
+// Routes
+
+app.use('/api/auth', userRouter);
 
 mongoose
 	.connect(process.env.MONGO_URL, {
@@ -20,6 +26,6 @@ mongoose
 		console.log(err.message);
 	});
 
-const server = app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT, () => {
 	console.log(`Server started on port ${process.env.PORT}`);
 });
