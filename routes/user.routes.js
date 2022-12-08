@@ -1,6 +1,15 @@
 import { Router } from 'express';
-import { register } from '../controllers/user.controller.js';
+import { UserContorller } from '../controllers/index.js';
+import { handleValidationErrors } from '../utils/handleValidationErrors.js';
+import { registerValidation } from '../validations.js';
 
 export const router = Router();
 
-router.post('/register', register);
+router.post(
+	'/register',
+	registerValidation,
+	handleValidationErrors,
+	UserContorller.register
+);
+
+router.post('/login', UserContorller.login);

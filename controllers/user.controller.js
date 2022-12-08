@@ -3,8 +3,6 @@ import bcrypt from 'bcrypt';
 
 export const register = async (req, res) => {
 	try {
-		console.log(req.body);
-
 		const { username, email, password } = req.body;
 
 		const isUsernameUsed = await UserModel.findOne({ username });
@@ -33,6 +31,34 @@ export const register = async (req, res) => {
 		});
 
 		const user = await doc.save();
+
+		res.json({ user, status: true });
+	} catch (err) {
+		console.log(err);
+	}
+};
+
+export const login = async (req, res) => {
+	try {
+		const { username, password } = req.body;
+
+		const user = await UserModel.findOne({ username });
+
+		if (!user) {
+			return res.json({
+				msg: 'Incorrect username or password',
+				status: false,
+			});
+		}
+
+		const isValidPass = await bcrypt.compare(password, user.password);
+
+		if (!isValidPass) {
+			return res.json({
+				msg: 'Incorrect username or password',
+				status: false,
+			});
+		}
 
 		res.json({ user, status: true });
 	} catch (err) {
