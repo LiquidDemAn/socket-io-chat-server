@@ -65,3 +65,24 @@ export const login = async (req, res) => {
 		console.log(err);
 	}
 };
+
+export const setAvatar = async (req, res) => {
+	try {
+		const _id = req.params.id;
+		const avatar = req.body.avatar;
+
+		const user = await UserModel.findOneAndUpdate(
+			{ _id },
+			{
+				avatar,
+			}
+		);
+
+		return res.json({
+			avatar: user.avatar,
+			status: true,
+		});
+	} catch (err) {
+		console.log(err);
+	}
+};

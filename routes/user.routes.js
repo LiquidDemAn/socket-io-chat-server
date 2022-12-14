@@ -13,3 +13,4 @@ router.post(
 );
 
 router.post('/login', UserContorller.login);
+router.post('/set-avatar/:id', UserContorller.setAvatar);
