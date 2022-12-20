@@ -108,14 +108,12 @@ export const setAvatar = async (req, res) => {
 		const user = await UserModel.findOneAndUpdate(
 			{ _id },
 			{
-				avatar,
-			}
-		);
+				avatar: avatar,
+			},
+			{ new: true }
+		).exec();
 
-		return res.json({
-			avatar: user.avatar,
-			status: true,
-		});
+		return res.json(user.avatar);
 	} catch (err) {
 		console.log(err);
 
