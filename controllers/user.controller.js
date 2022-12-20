@@ -1,6 +1,32 @@
 import UserModel from '../models/user.model.js';
 import bcrypt from 'bcrypt';
 
+export const loadUser = async (req, res) => {
+	try {
+		const _id = req.params.id;
+
+		const user = await UserModel.findById(_id);
+
+		if (!user) {
+			return res.status(404).json({
+				msg: 'User not found',
+				status: false,
+			});
+		}
+
+		return res.json({
+			user,
+			status: true,
+		});
+	} catch (err) {
+		console.log(err);
+
+		res.status(500).json({
+			message: 'Something went wrong...',
+		});
+	}
+};
+
 export const register = async (req, res) => {
 	try {
 		const { username, email, password } = req.body;
@@ -9,14 +35,14 @@ export const register = async (req, res) => {
 		const isEmailUsed = await UserModel.findOne({ email });
 
 		if (isUsernameUsed) {
-			return res.json({
+			return res.status(409).json({
 				msg: 'Username already used',
 				status: false,
 			});
 		}
 
 		if (isEmailUsed) {
-			return res.json({
+			return res.status(409).json({
 				msg: 'Email already used',
 				status: false,
 			});
@@ -35,6 +61,10 @@ export const register = async (req, res) => {
 		res.json({ user, status: true });
 	} catch (err) {
 		console.log(err);
+
+		res.status(500).json({
+			message: 'Something went wrong...',
+		});
 	}
 };
 
@@ -45,7 +75,7 @@ export const login = async (req, res) => {
 		const user = await UserModel.findOne({ username });
 
 		if (!user) {
-			return res.json({
+			return res.status(400).json({
 				msg: 'Incorrect username or password',
 				status: false,
 			});
@@ -54,7 +84,7 @@ export const login = async (req, res) => {
 		const isValidPass = await bcrypt.compare(password, user.password);
 
 		if (!isValidPass) {
-			return res.json({
+			return res.status(404).json({
 				msg: 'Incorrect username or password',
 				status: false,
 			});
@@ -63,6 +93,10 @@ export const login = async (req, res) => {
 		res.json({ user, status: true });
 	} catch (err) {
 		console.log(err);
+
+		res.status(500).json({
+			message: 'Something went wrong...',
+		});
 	}
 };
 
@@ -84,5 +118,24 @@ export const setAvatar = async (req, res) => {
 		});
 	} catch (err) {
 		console.log(err);
+
+		res.status(500).json({
+			message: 'Something went wrong...',
+		});
 	}
+};
+
+export const getContacts = async (req, res) => {
+	const id = req.params.id;
+
+	try {
+		const users = await UserModel.find({ _id: { $ne: id } })
+			.select({ _id: 1, email: 1, username: 1, avatar: 1 })
+			.exec();
+
+		return res.json({
+			users,
+			status: true,
+		});
+	} catch (err) {}
 };

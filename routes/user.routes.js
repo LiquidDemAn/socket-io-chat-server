@@ -6,11 +6,13 @@ import { registerValidation } from '../validations.js';
 export const router = Router();
 
 router.post(
-	'/register',
+	'/auth/register',
 	registerValidation,
 	handleValidationErrors,
 	UserContorller.register
 );
 
-router.post('/login', UserContorller.login);
-router.post('/set-avatar/:id', UserContorller.setAvatar);
+router.post('/auth/login', UserContorller.login);
+router.post('/auth/set-avatar/:id', UserContorller.setAvatar);
+router.get('/auth/load-user/:id', UserContorller.loadUser);
+router.get('/contacts/:id', UserContorller.getContacts);
