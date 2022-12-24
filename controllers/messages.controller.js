@@ -16,7 +16,12 @@ export const createMessage = async (req, res) => {
 			});
 		}
 
-		res.json(data);
+		res.json({
+			_id: data._id,
+			fromSelf: true,
+			message: text,
+			from,
+		});
 	} catch (err) {
 		console.log(err);
 
@@ -26,4 +31,30 @@ export const createMessage = async (req, res) => {
 	}
 };
 
-export const getAllMessages = async (req, res) => {};
+export const getAllMessages = async (req, res) => {
+	try {
+		const { from, to } = req.params;
+		const messages = await MessageModel.find({
+			users: {
+				$all: [from, to],
+			},
+		}).sort({ updatedAt: 1 });
+
+		const projectMessages = messages.map((message) => {
+			return {
+				_id: message._id,
+				fromSelf: message.sender.toString() === from,
+				message: message.text,
+				from,
+			};
+		});
+
+		res.json(projectMessages);
+	} catch (err) {
+		console.log(err);
+
+		res.status(500).json({
+			message: 'Something went wrong...',
+		});
+	}
+};

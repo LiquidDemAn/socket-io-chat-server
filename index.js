@@ -3,6 +3,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import { messagesRouter, userRouter } from './routes/index.js';
 import dotenv from 'dotenv';
+import { Server } from 'socket.io';
 
 const app = express();
 dotenv.config();
@@ -27,6 +28,35 @@ mongoose
 		console.log(err.message);
 	});
 
-app.listen(process.env.PORT, () => {
+const server = app.listen(process.env.PORT, () => {
 	console.log(`Server started on port ${process.env.PORT}`);
+});
+
+const io = new Server(server, {
+	cors: {
+		origin: 'http://localhost:3000',
+		credentials: true,
+	},
+});
+
+global.onlineUsers = new Map();
+
+io.on('connection', (socket) => {
+	global.chatSocket = socket;
+
+	socket.on('add-user', (userId) => {
+		onlineUsers.set(userId, socket.id);
+	});
+
+	socket.on('send-message', (data) => {
+		const sendUserSocket = onlineUsers.get(data.to);
+
+		if (sendUserSocket) {
+			socket.to(sendUserSocket).emit('message-receive', {
+				_id: data._id,
+				message: data.text,
+				from: data.from,
+			});
+		}
+	});
 });
