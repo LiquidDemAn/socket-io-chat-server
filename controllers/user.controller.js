@@ -5,11 +5,11 @@ export const loadUser = async (req, res) => {
 	try {
 		const _id = req.params.id;
 
-		const user = await UserModel.findById(_id);
+		const user = _id ? await UserModel.findById(_id) : null;
 
 		if (!user) {
 			return res.status(404).json({
-				msg: 'User not found',
+				message: 'User not found',
 				status: false,
 			});
 		}
@@ -36,14 +36,14 @@ export const register = async (req, res) => {
 
 		if (isUsernameUsed) {
 			return res.status(409).json({
-				msg: 'Username already used',
+				message: 'Username already used',
 				status: false,
 			});
 		}
 
 		if (isEmailUsed) {
 			return res.status(409).json({
-				msg: 'Email already used',
+				message: 'Email already used',
 				status: false,
 			});
 		}
@@ -131,9 +131,10 @@ export const getContacts = async (req, res) => {
 			.select({ _id: 1, email: 1, username: 1, avatar: 1 })
 			.exec();
 
-		return res.json({
-			users,
-			status: true,
+		return res.json(users);
+	} catch (err) {
+		res.status(500).json({
+			message: 'Something went wrong...',
 		});
-	} catch (err) {}
+	}
 };
