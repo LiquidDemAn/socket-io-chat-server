@@ -56,6 +56,8 @@ io.on('connection', (socket) => {
 				_id: data._id,
 				message: data.text,
 				from: data.from,
+				to: data.to,
+				fromSelf: false,
 			});
 		}
 	});

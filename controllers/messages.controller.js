@@ -21,6 +21,7 @@ export const createMessage = async (req, res) => {
 			fromSelf: true,
 			message: text,
 			from,
+			to,
 		});
 	} catch (err) {
 		console.log(err);
@@ -46,6 +47,7 @@ export const getAllMessages = async (req, res) => {
 				fromSelf: message.sender.toString() === from,
 				message: message.text,
 				from,
+				to,
 			};
 		});
 

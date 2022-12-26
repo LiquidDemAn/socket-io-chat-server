@@ -9,20 +9,16 @@ export const loadUser = async (req, res) => {
 
 		if (!user) {
 			return res.status(404).json({
-				message: 'User not found',
-				status: false,
+				msg: 'User not found',
 			});
 		}
 
-		return res.json({
-			user,
-			status: true,
-		});
+		return res.json(user);
 	} catch (err) {
 		console.log(err);
 
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };
@@ -36,15 +32,13 @@ export const register = async (req, res) => {
 
 		if (isUsernameUsed) {
 			return res.status(409).json({
-				message: 'Username already used',
-				status: false,
+				msg: 'Username already used',
 			});
 		}
 
 		if (isEmailUsed) {
 			return res.status(409).json({
-				message: 'Email already used',
-				status: false,
+				msg: 'Email already used',
 			});
 		}
 
@@ -58,7 +52,7 @@ export const register = async (req, res) => {
 
 		const user = await doc.save();
 
-		res.json({ user, status: true });
+		res.json(user);
 	} catch (err) {
 		console.log(err);
 
@@ -77,7 +71,6 @@ export const login = async (req, res) => {
 		if (!user) {
 			return res.status(400).json({
 				msg: 'Incorrect username or password',
-				status: false,
 			});
 		}
 
@@ -86,11 +79,10 @@ export const login = async (req, res) => {
 		if (!isValidPass) {
 			return res.status(404).json({
 				msg: 'Incorrect username or password',
-				status: false,
 			});
 		}
 
-		res.json({ user, status: true });
+		res.json(user);
 	} catch (err) {
 		console.log(err);
 
