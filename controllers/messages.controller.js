@@ -12,7 +12,7 @@ export const createMessage = async (req, res) => {
 
 		if (!data) {
 			res.status(500).json({
-				message: 'Failed to create message',
+				msg: 'Failed to create message',
 			});
 		}
 
@@ -27,7 +27,7 @@ export const createMessage = async (req, res) => {
 		console.log(err);
 
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };
@@ -56,7 +56,7 @@ export const getAllMessages = async (req, res) => {
 		console.log(err);
 
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };

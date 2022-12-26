@@ -57,7 +57,7 @@ export const register = async (req, res) => {
 		console.log(err);
 
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };
@@ -87,7 +87,7 @@ export const login = async (req, res) => {
 		console.log(err);
 
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };
@@ -110,7 +110,7 @@ export const setAvatar = async (req, res) => {
 		console.log(err);
 
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };
@@ -126,7 +126,7 @@ export const getContacts = async (req, res) => {
 		return res.json(users);
 	} catch (err) {
 		res.status(500).json({
-			message: 'Something went wrong...',
+			msg: 'Something went wrong...',
 		});
 	}
 };
